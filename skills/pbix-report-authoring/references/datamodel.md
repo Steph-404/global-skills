@@ -1,6 +1,6 @@
 # The data model, donors, and DAX
 
-## Why a donor is mandatory
+## Why this skill needs a donor
 
 `DataModel` is an XPress9-compressed Analysis Services backup. Its first bytes
 decode to:
@@ -116,13 +116,17 @@ scatter's X and Y.
 
 ## When the model itself must change
 
-If the donor lacks the table you need, options in order of preference:
+This skill inherits models; it does not build them. If the donor lacks the
+table you need:
 
-1. **Find or build another donor** — usually fastest.
-2. **Add the table in Desktop**, save, then use that file as the donor.
-3. **Tabular Editor / TMSL** — automatable, but a much larger investment and a
-   different skill. Out of scope here.
+1. **Add the table in Desktop**, save, then use that file as the donor. Simplest.
+2. **Author the model as PBIP/TMDL** — plain-text `.tmdl` files, no donor
+   needed. See `pbip.md`. Desktop still compiles it to a `.pbix` at the end.
+3. **Tabular Editor or the TOM library** — both scriptable, both automatable.
 
-Never try to synthesise `DataModel` bytes. You will produce a file Desktop
-cannot open, and the failure mode is a generic "file is corrupted" message that
-gives no clue what went wrong.
+Option 2 is usually the right one for a genuinely new dataset.
+
+There is one thing that is genuinely not worth doing: hand-synthesising the
+`DataModel` bytes. You would produce a file Desktop cannot open, and the
+failure mode is a generic "file is corrupted" message that gives no clue what
+went wrong.

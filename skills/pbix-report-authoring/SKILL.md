@@ -27,8 +27,25 @@ backup. You cannot read, write, or synthesise it from Python.
 So the architecture is fixed: **inherit the data model from a donor `.pbix`,
 and rewrite only the report layer.** This is the approach this skill automates.
 
-Never promise a from-scratch PBIX with arbitrary data. It needs either
-Power BI Desktop, Tabular Editor, or the Analysis Services client libraries.
+So within *this* skill the architecture is fixed: **inherit the data model from
+a donor `.pbix`, and rewrite only the report layer.**
+
+Be precise about what that means. Creating a data model from scratch **is**
+possible — just not with Python's standard library, which cannot write those
+bytes. The available routes:
+
+| Route | Automatable | Notes |
+|---|---|---|
+| **PBIP + TMDL** | yes | Preferred. Model becomes plain-text `.tmdl` files. |
+| **TMSL (`model.bim`)** | yes | One large JSON file. |
+| **TOM client library** | yes | Microsoft's official modelling API. |
+| **Tabular Editor** | yes | Free, CLI-scriptable. |
+| **Power BI Desktop** | no | The manual route; always the last step. |
+
+If the task is "build a dashboard from scratch", a **PBIP** project is usually
+the better target than a `.pbix` — see `references/pbip.md`. This skill covers
+the legacy `.pbix` container, which is what you have when a donor already
+exists.
 
 ## Workflow
 
@@ -213,6 +230,7 @@ the exact numbers:
 | `references/container-format.md` | Every part, encoding, compression. |
 | `references/visual-json.md` | Visual anatomy, literals, aggregation codes. |
 | `references/datamodel.md` | Donors, DAX measures, relationship setup. |
+| `references/pbip.md` | The PBIP/TMDL folder format — preferred for new builds. |
 | `references/resources-and-maps.md` | Images, TopoJSON, Shape Map. |
 | `references/spec-format.md` | Full spec reference. |
 | `references/troubleshooting.md` | Symptom → cause → fix. |
@@ -220,7 +238,9 @@ the exact numbers:
 
 ## Limits — say these plainly
 
-- You cannot create a data model from scratch. A donor PBIX is mandatory.
+- This skill inherits the data model; it does not build one. Model creation is
+  still possible, but via PBIP/TMDL, TOM, or Tabular Editor — see
+  `references/pbip.md`.
 - Desktop must be available at least once, to sign the file.
 - Visual styling you script is a starting point; Desktop's theme engine has the
   final word and will normalise on save.
