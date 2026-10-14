@@ -1,0 +1,86 @@
+{
+  "_note": "Working two-page example. Replace donor/output/paths, and set 'entity' to your real model table name (find it with: python scripts/pbix_inspect.py donor.pbix --entities).",
+
+  "donor": "assets/donor.pbix",
+  "output": "out/sales_overview.pbix",
+  "navigation": true,
+
+  "resources": [
+    {"file": "assets/cover.jpg", "name": "cover.jpg", "type": "Image"},
+    {"file": "assets/regions.topo.json", "name": "regions.topo.json", "type": "ShapeMap"}
+  ],
+
+  "pages": [
+    {
+      "id": "overview",
+      "title": "Overview",
+      "visuals": [
+        {"id": "title", "type": "heading", "x": 20, "y": 84, "w": 900, "h": 46,
+         "z": 2, "text": "Sales overview", "size": 21,
+         "subtitle": "Revenue and volume by region, 2024"},
+
+        {"id": "kpi_revenue", "type": "card", "x": 20, "y": 156, "w": 303, "h": 100,
+         "z": 10, "entity": "sales", "column": "revenue",
+         "label": "Total revenue", "agg": "sum", "accent": "#1F3864"},
+        {"id": "kpi_margin", "type": "card", "x": 335, "y": 156, "w": 303, "h": 100,
+         "z": 11, "entity": "sales", "column": "margin",
+         "label": "Mean margin (%)", "agg": "average", "accent": "#2E7D32"},
+        {"id": "kpi_volume", "type": "card", "x": 650, "y": 156, "w": 303, "h": 100,
+         "z": 12, "entity": "sales", "column": "units",
+         "label": "Total units", "agg": "sum", "accent": "#C77700"},
+        {"id": "kpi_growth", "type": "card", "x": 965, "y": 156, "w": 303, "h": 100,
+         "z": 13, "entity": "sales", "column": "growth_pct",
+         "label": "Mean growth (%)", "agg": "average", "accent": "#197278"},
+
+        {"id": "map", "type": "shapemap", "x": 20, "y": 260, "w": 470, "h": 252,
+         "z": 20, "entity": "sales", "location": "boundary_name",
+         "value": "revenue", "heading": "Revenue by region",
+         "resource": "regions.topo.json", "agg": "sum"},
+
+        {"id": "rank", "type": "bar", "x": 502, "y": 260, "w": 758, "h": 252,
+         "z": 21, "entity": "sales", "category": "region", "value": "revenue",
+         "heading": "Region ranking", "colour": "#2E7D32", "agg": "sum"},
+
+        {"id": "detail", "type": "table", "x": 20, "y": 518, "w": 1240, "h": 146,
+         "z": 30, "entity": "sales",
+         "columns": [
+           ["region", "Region"],
+           ["revenue", "Revenue", "sum"],
+           ["units", "Units", "sum"],
+           ["margin", "Margin", "average"]
+         ]},
+
+        {"id": "caveats", "type": "textbox", "x": 20, "y": 668, "w": 1240, "h": 40,
+         "z": 40,
+         "runs": [
+           {"text": "Source and caveats  ", "size": 8, "bold": true, "colour": "#1F3864"},
+           {"text": "Figures cover the 2024 financial year. Margin and growth are means across the rows present in each region, not totals. Region names match the boundary file via the boundary_name lookup column; any region rendering grey failed to match and must be added to that lookup.",
+            "size": 7.5, "colour": "#595959"}
+         ]}
+      ]
+    },
+
+    {
+      "id": "relationships",
+      "title": "Relationships",
+      "visuals": [
+        {"id": "title2", "type": "heading", "x": 20, "y": 84, "w": 900, "h": 46,
+         "z": 2, "text": "Relationships", "size": 21,
+         "subtitle": "Where revenue and margin move together"},
+
+        {"id": "rule", "type": "shape", "x": 20, "y": 148, "w": 1240, "h": 6,
+         "z": 1, "fill": "#1F3864"},
+
+        {"id": "scatter", "type": "scatter", "x": 20, "y": 170, "w": 620, "h": 300,
+         "z": 20, "entity": "sales", "x_prop": "margin", "y_prop": "growth_pct",
+         "detail": "region", "heading": "Margin against growth, one point per region",
+         "agg": "average"},
+
+        {"id": "by_region", "type": "column", "x": 660, "y": 170, "w": 600, "h": 300,
+         "z": 21, "entity": "sales", "category": "region", "value": "margin",
+         "heading": "Mean margin by region", "colour": "#7B3F9D",
+         "agg": "average", "decimals": 1}
+      ]
+    }
+  ]
+}
