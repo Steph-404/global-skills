@@ -49,7 +49,20 @@ Install globally:
 .\install\install.ps1
 ```
 
-or manually copy a skill folder to:
+On Windows the default execution policy blocks `.ps1` files. Either bypass it
+for that invocation:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install\install.ps1
+```
+
+or set it for your user:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Or skip the script entirely and copy the folder to:
 
 - Windows: `%USERPROFILE%\.config\opencode\skills\<name>\`
 - macOS / Linux: `~/.config/opencode/skills/<name>/`

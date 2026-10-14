@@ -65,6 +65,9 @@ foreach ($name in $skills) {
     }
     else {
         Copy-Item -LiteralPath $src -Destination $dst -Recurse -Force
+        # Never carry compiled bytecode into the skill folder.
+        Get-ChildItem -LiteralPath $dst -Recurse -Directory -Filter "__pycache__" -ErrorAction SilentlyContinue |
+            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
         Write-Host "copied  $name" -ForegroundColor Green
     }
 }
